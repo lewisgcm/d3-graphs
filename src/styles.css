@@ -5,3 +5,26 @@ svg {
     margin-left: auto;
     display: block;
 }
+
+svg circle.node {
+	fill: grey;
+	stroke-width: 1px;
+	stroke: black;
+}
+
+svg circle.start {
+	fill: #f49e42;
+	stroke-width: 1px;
+	stroke: black;
+}
+
+svg circle.stop {
+	fill: red;
+	stroke-width: 1px;
+	stroke: black;
+}
+
+svg line {
+	stroke-width: 1;
+	stroke: #E5E5E5;
+}
