@@ -28,3 +28,12 @@ svg line {
 	stroke-width: 1;
 	stroke: #E5E5E5;
 }
+
+svg line.hidden {
+	stroke-width: 0;
+}
+
+svg line.path {
+	stroke-width: 1;
+	stroke: black;
+}

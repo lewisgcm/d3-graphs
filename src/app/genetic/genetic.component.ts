@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 
 import { Graph, Node } from "../core/core.module";
 import { GeneticGraphNodeGenerator } from "./genetic-graph-node-generator";
+import { GeneticGraphPathFinder } from './genetic-graph-path-finder';
 
 @Component({
   selector: 'genetic-component',
@@ -12,13 +13,15 @@ export class GeneticComponent implements OnInit, OnDestroy {
 
     @ViewChild('graphView') graphView;
 
+    pathFinder: GeneticGraphPathFinder;
     graph: Graph;
     width: number = 800;
     height: number = 640;
-    maxNodes: number = 15;
+    maxNodes: number = 20;
 
-    startId: number;
-    endId: number;
+    startId: number = 1;
+    endId: number = 2;
+    iterations : number = 1000;
 
     ngOnInit () {
         this.graph = new Graph(
@@ -27,12 +30,15 @@ export class GeneticComponent implements OnInit, OnDestroy {
             this.height,
             new GeneticGraphNodeGenerator( this.maxNodes )
         );
-
-        console.log(this.generateRandomPath());
+        this.pathFinder = new GeneticGraphPathFinder( this.graph );
+        this.graph.setStart( this.startId );
+        this.graph.setEnd( this.endId );
     }
 
     generate() {
         this.graph.generate();
+        this.graph.setStart( this.startId );
+        this.graph.setEnd( this.endId );
     }
 
     ngOnDestroy() {
@@ -49,22 +55,7 @@ export class GeneticComponent implements OnInit, OnDestroy {
     }
 
     findPath() {
-
-    }
-
-    pathFitness(path: Node[]) {
-
-    }
-
-    generateRandomPath() : Node[] {
-        var path = this.graph.nodes.slice(0);
-        var maxShuffles = this.maxNodes^2;
-        while( maxShuffles-- > 0 ) {
-            var index = Math.max(Math.min(((Math.random()*this.maxNodes) | 0),1), this.maxNodes-1);
-            var tmp = path[index];
-            path[index] = path[this.maxNodes-index];
-            path[this.maxNodes-index] = tmp;
-        }
-        return path;
+        var path = this.pathFinder.findShortestPath(this.startId, this.endId);
+        this.graph.highlightPath( path );
     }
 }

@@ -5,7 +5,7 @@ import { Node } from './node';
 import * as d3 from 'd3';
 
 export class Graph {
-
+	
 	private svg;
 	public nodes: Node[];
 	private onClickSubject: ReplaySubject<[ Node, SVGElement ]> = new ReplaySubject(1);
@@ -43,14 +43,15 @@ export class Graph {
 		);
 
 		const simulation = d3.forceSimulation<Node>()
-  			.force('charge', d3.forceManyBody().strength(-15)) 
+  			.force('charge', d3.forceManyBody().strength(-6)) 
   			.force('center', d3.forceCenter(this.width / 2, this.height / 2));
 
 		const linkElements = this.svg.append('g')
-		  .selectAll('line')
-		  .data(links)
-		  .enter()
-		  	.append('line');
+			.selectAll('line')
+			.data(links)
+			.enter()
+			.append('line')
+			.attr( 'id', (link) => `id-${link.source}-${link.target}` );
 
   		const nodeElements = this.svg.append('g')
 		  .selectAll('circle')
@@ -103,7 +104,7 @@ export class Graph {
   			function(data: Node) {
   				that.onClickSubject.next([ data, <any>this ]);
         	}
-        );
+		);
 	}
 
 	public onClick() : Observable<[ Node, SVGElement ]> {
@@ -128,6 +129,19 @@ export class Graph {
 
 	public getEnd() {
 		return this.getNode(this.endId);
+	}
+
+	public highlightPath(path: Node[]) {
+		d3.selectAll( 'line' ).classed( 'hidden', true );
+		for(var i = 0; i < path.length-1; i++){
+			var id = `#id-${path[i].id}-${path[i+1].id}`;
+			d3.select(id).classed( 'path', true );
+			d3.select(id).classed( 'hidden', false );
+		}
+	}
+
+	public clearPaths() {
+		d3.selectAll('.path').classed( 'path', false );
 	}
 
 	public distance(a: Node, b: Node) {
