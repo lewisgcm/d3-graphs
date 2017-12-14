@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 
-import { Graph } from "../core/core.module";
+import { Graph, Node } from "../core/core.module";
+import { GeneticGraphNodeGenerator } from "./genetic-graph-node-generator";
 
 @Component({
   selector: 'genetic-component',
@@ -24,8 +25,10 @@ export class GeneticComponent implements OnInit, OnDestroy {
             this.graphView.nativeElement,
             this.width,
             this.height,
-            this.maxNodes
+            new GeneticGraphNodeGenerator( this.maxNodes )
         );
+
+        console.log(this.generateRandomPath());
     }
 
     generate() {
@@ -47,5 +50,21 @@ export class GeneticComponent implements OnInit, OnDestroy {
 
     findPath() {
 
+    }
+
+    pathFitness(path: Node[]) {
+
+    }
+
+    generateRandomPath() : Node[] {
+        var path = this.graph.nodes.slice(0);
+        var maxShuffles = this.maxNodes^2;
+        while( maxShuffles-- > 0 ) {
+            var index = Math.max(Math.min(((Math.random()*this.maxNodes) | 0),1), this.maxNodes-1);
+            var tmp = path[index];
+            path[index] = path[this.maxNodes-index];
+            path[this.maxNodes-index] = tmp;
+        }
+        return path;
     }
 }

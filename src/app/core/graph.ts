@@ -1,4 +1,5 @@
 import { Observable, ReplaySubject } from 'rxjs';
+import { GraphNodeGenerator } from './graph-node-generator';
 
 import { Node } from './node';
 import * as d3 from 'd3';
@@ -16,7 +17,7 @@ export class Graph {
 		private selector: Element,
 		private width: number,
 		private height: number,
-		private maxNodes: number
+		private generator: GraphNodeGenerator<Node>
 	) {
 		this.svg = d3.select( selector );
 		this.generate();
@@ -24,15 +25,13 @@ export class Graph {
 
 	public generate() {
 		this.clear();
-		this.nodes = Array.from(
-			{length: this.maxNodes},
-			(value, key) => <any>{ 'id' : key+1, 'x' : Math.random(), 'y' : Math.random() }
-		);
+		this.nodes = this.generator
+			.generate();
 
 		const links = this.nodes.map(
 			(node) => {
 				return Array.from(
-					{length: this.maxNodes},
+					{length: this.nodes.length},
 					(value, key) => <any>{ 'source' : node.id, 'target': key+1, 'strength' : 0 }
 				)
 				.filter((link) => link.source != link.target);
@@ -123,8 +122,16 @@ export class Graph {
 		this.svg.selectAll("*").remove();
 	}
 
-	public toggleClass(c : string, visible: boolean) {
-		this.svg.selectAll( "*" ).classed( c, visible );
+	public getStart() {
+		return this.getNode(this.startId);
+	}
+
+	public getEnd() {
+		return this.getNode(this.endId);
+	}
+
+	public distance(a: Node, b: Node) {
+		return Math.sqrt( (b.x - a.x)^2 + (b.y - b.y)^2 );
 	}
 
 	public setStart(id: number) {
