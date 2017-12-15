@@ -5,7 +5,7 @@ export class GeneticGraphPathFinder implements GraphPathFinder<Node> {
 
     private readonly populationSize: number = 1000;
     private readonly populationSample: number = 100;
-    private readonly mutationChancePercent: number = 25;
+    private readonly mutationChancePercent: number = 20;
 
     private population: Node[][];
 
@@ -147,7 +147,7 @@ export class GeneticGraphPathFinder implements GraphPathFinder<Node> {
             path[end-1] = tmp;
         }
 
-        var maxShuffles = path.length^2;
+        var maxShuffles = path.length;
         while( maxShuffles-- > 0 ) {
             this.safeShuffle( path );
         }

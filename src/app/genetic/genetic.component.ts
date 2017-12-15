@@ -21,8 +21,9 @@ export class GeneticComponent implements OnInit, OnDestroy {
 
     startId: number = 1;
     endId: number = 2;
-    iterations : number = 1;
     distance: number = 0;
+
+    timer;
 
     stepMode = false;
 
@@ -39,13 +40,14 @@ export class GeneticComponent implements OnInit, OnDestroy {
     }
 
     generate() {
+        this.stopFinding();
         this.graph.generate();
         this.graph.setStart( this.startId );
         this.graph.setEnd( this.endId );
-        this.stepMode = false;
     }
 
     ngOnDestroy() {
+        this.stopFinding();
         this.graph.clear();
         delete this.graph;
     }
@@ -62,12 +64,20 @@ export class GeneticComponent implements OnInit, OnDestroy {
         var path = this.pathFinder.findShortestPath(this.startId, this.endId);
         this.distance = path.distance | 0;
         this.graph.highlightPath( path.path );
-        this.stepMode = true;
+
+        this.stopFinding();
+        this.timer = setInterval(
+            () => {
+                var path = this.pathFinder.step();
+                this.distance = path.distance | 0;
+                this.graph.highlightPath( path.path );
+            },
+            50
+        );
     }
 
-    step() {
-        var path = this.pathFinder.step();
-        this.distance = path.distance | 0;
-        this.graph.highlightPath( path.path );
+    stopFinding() {
+        clearInterval( this.timer );
+        this.timer = undefined;
     }
 }
