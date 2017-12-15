@@ -132,6 +132,7 @@ export class Graph {
 	}
 
 	public highlightPath(path: Node[]) {
+		this.clearPaths();
 		d3.selectAll( 'line' ).classed( 'hidden', true );
 		for(var i = 0; i < path.length-1; i++){
 			var id = `#id-${path[i].id}-${path[i+1].id}`;
@@ -145,7 +146,7 @@ export class Graph {
 	}
 
 	public distance(a: Node, b: Node) {
-		return Math.sqrt( (b.x - a.x)^2 + (b.y - b.y)^2 );
+		return Math.sqrt( Math.pow(b.x - a.x,2) + Math.pow(b.y - b.y,2) );
 	}
 
 	public setStart(id: number) {

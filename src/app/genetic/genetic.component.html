@@ -2,15 +2,10 @@
 	<div class="row">
     	<svg width="800" height="640" #graphView></svg>
 	</div>
-    <div class="row">
+    <div class="row" [hidden]="stepMode">
     	<form class="form-inline" style="padding-top:15px;">
     		<label class="mr-sm-2" >Generate a new Graph</label>
     		<button class="btn btn-primary btn-sm" (click)="generate()" type="button" >Generate</button>
-
-    		<span class="spacer"></span>
-			
-			<label class="mr-sm-2" >Iterations: </label>
-			<input [(ngModel)]="iterations" class="form-control form-control-sm" name="iterations" type="number" />
 
     		<label class="mr-sm-2" >Start: </label>
     		<select [(ngModel)]="startId" class="form-control form-control-sm" name="startId" (change)="onStartChange()">
@@ -24,5 +19,17 @@
 
 			<button class="btn btn-primary btn-sm" (click)="findPath()" type="button" >Find Path</button>
     	</form>
-    </div>
+	</div>
+    <div class="row" [hidden]="!stepMode">
+    	<form class="form-inline" style="padding-top:15px;">
+			<button class="btn btn-primary btn-sm" (click)="generate()" type="button" >Reset</button>
+			
+			<label class="mr-sm-2" >Distance</label>
+			<input type="readonly" class="form-control" [value]="distance" />
+
+    		<span class="spacer"></span>
+
+			<button class="btn btn-primary btn-sm" (click)="step()" type="button" >Step</button>
+    	</form>
+	</div>
 </div>

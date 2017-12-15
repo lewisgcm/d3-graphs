@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 
-import { Graph, Node } from "../core/core.module";
+import { Graph, Node, Path } from "../core/core.module";
 import { GeneticGraphNodeGenerator } from "./genetic-graph-node-generator";
 import { GeneticGraphPathFinder } from './genetic-graph-path-finder';
 
@@ -17,11 +17,14 @@ export class GeneticComponent implements OnInit, OnDestroy {
     graph: Graph;
     width: number = 800;
     height: number = 640;
-    maxNodes: number = 20;
+    maxNodes: number = 30;
 
     startId: number = 1;
     endId: number = 2;
-    iterations : number = 1000;
+    iterations : number = 1;
+    distance: number = 0;
+
+    stepMode = false;
 
     ngOnInit () {
         this.graph = new Graph(
@@ -39,6 +42,7 @@ export class GeneticComponent implements OnInit, OnDestroy {
         this.graph.generate();
         this.graph.setStart( this.startId );
         this.graph.setEnd( this.endId );
+        this.stepMode = false;
     }
 
     ngOnDestroy() {
@@ -56,6 +60,14 @@ export class GeneticComponent implements OnInit, OnDestroy {
 
     findPath() {
         var path = this.pathFinder.findShortestPath(this.startId, this.endId);
-        this.graph.highlightPath( path );
+        this.distance = path.distance | 0;
+        this.graph.highlightPath( path.path );
+        this.stepMode = true;
+    }
+
+    step() {
+        var path = this.pathFinder.step();
+        this.distance = path.distance | 0;
+        this.graph.highlightPath( path.path );
     }
 }
