@@ -1,5 +1,4 @@
 import { GraphPathFinder, Graph, Node, Path } from '../core/core.module';
-import { generate } from 'rxjs/observable/generate';
 
 export class GeneticGraphPathFinder implements GraphPathFinder<Node> {
 
@@ -119,12 +118,12 @@ export class GeneticGraphPathFinder implements GraphPathFinder<Node> {
     safeShuffle(path: Node[]) {
         var indexFirst = this.withinBounds(
             ((Math.random()*path.length) | 0),
-            2,
+            1,
             path.length-2
         );
         var indexSecond = this.withinBounds(
             ((Math.random()*path.length) | 0),
-            2,
+            1,
             path.length-2
         );
         var tmp = path[indexFirst];

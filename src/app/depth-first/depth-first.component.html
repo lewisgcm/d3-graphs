@@ -1,0 +1,27 @@
+<h3>Graph search using depth first Algorithm</h3>
+<div class="container">
+	<div class="row">
+    	<svg width="800" height="640" #graphView></svg>
+	</div>
+    <div class="row" >
+    	<form class="form-inline" style="padding-top:15px;">
+
+    		<button class="btn btn-primary btn-sm mr-auto col-2" (click)="generate()" type="button" >New Graph</button>
+
+    		<label class="mr-sm-2" >Start: </label>
+    		<select [(ngModel)]="startId" class="form-control form-control-sm mr-sm-2" name="startId" (change)="onStartChange()">
+			      <option *ngFor="let c of graph.nodes" [value]="c.id">{{c.id}}</option>
+			</select>
+
+			<label class="mr-sm-2" >End: </label>
+    		<select [(ngModel)]="endId" class="form-control form-control-sm mr-sm-2" name="endId" (change)="onEndChange()" >
+			      <option *ngFor="let c of graph.nodes" [value]="c.id">{{c.id}}</option>
+			</select>
+
+			<button class="btn btn-primary btn-sm mr-2" (click)="findPath()"  type="button" >Start</button>
+
+			<label class="mr-sm-1" >Distance: </label>
+			<input type="text" readonly class="form-control form-control-sm col-1 mr-2" [value]="distance" />
+		</form>
+	</div>
+</div>
