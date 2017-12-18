@@ -40,6 +40,7 @@ export class DepthFirstComponent implements OnInit, OnDestroy {
     }
 
     generate() {
+        this.distance = 0;
         this.graph.generate();
         this.graph.setStart( this.startId );
         this.graph.setEnd( this.endId );

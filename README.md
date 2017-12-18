@@ -1,6 +1,5 @@
 # GraphExamples
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.2.
+This project is a simple overview of varying graph search algorithms as applied to D3.js graphs.
 
 ## Development server
 
