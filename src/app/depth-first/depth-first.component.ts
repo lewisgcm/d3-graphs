@@ -17,7 +17,7 @@ export class DepthFirstComponent implements OnInit, OnDestroy {
     graph: Graph;
     width: number = 800;
     height: number = 640;
-    maxNodes: number = 30;
+    maxNodes: number = 8;
 
     startId: number = 1;
     endId: number = 2;

@@ -7,26 +7,46 @@ export class DepthFirstPathFinder implements GraphPathFinder<Node> {
     }
 
     findAllPaths(start: number, end: number) {
-        var choicess = this.getNodeConnections( start ).map(i => [i]);
-        var paths: Path[] = [];
-        while( choicess.length > 0 ) {
-            var path = [];
-            var choices = choicess.pop();
-            while( choices.length > 0 ) {
-                var current = choices.pop();
 
-                //We havent seen this node before, lets do it!
-                if( path.indexOf( current) == -1 ) {
-                    path.push( current );
-                    choices = choices.concat( this.getNodeConnections( current ) );
-                }
+        //Initialise our list of choices with the first step
+        var partialPaths = this.getNodeConnections( start ).filter( n => n != start && n != end ).map(i => [start, i]);
+        var paths: Path[] = [];
+
+        // Whilst we have choices to make
+        var lastLength = 0;
+        var its = 0;
+
+        while( partialPaths.length > 0 ) {
+            its ++;
+
+            var partialPath = partialPaths.shift();
+            var choices = this.getNodeConnections( partialPath.slice(-1).pop() ).filter( (n) => partialPath.indexOf( n ) == -1 );
+
+            if( choices.length == 1 ) {
+                partialPath.push( choices.pop() );
+                var pathNodes = partialPath.map( i => this.graph.getNode( i ) );
+                paths.push(<Path>{
+                    path: pathNodes,
+                    distance: this.getPathDistance( pathNodes )
+                });
             }
-            var pathNodes = path.map( i => this.graph.getNode( i ) );
-            paths.push(<Path>{
-                path: pathNodes,
-                distance: this.getPathDistance( pathNodes )
-            });
+
+            if( partialPath.length != lastLength ) {
+                lastLength = partialPath.length;
+            }
+
+            choices
+                .filter(n => n != end && n!= start )
+                .map(n => partialPath.concat([n]))
+                .forEach(
+                    (path) => {
+                        partialPaths.push( path );
+                    }
+                );
         }
+
+        console.log({ its: its });
+
         return paths;
     }
 
@@ -37,7 +57,6 @@ export class DepthFirstPathFinder implements GraphPathFinder<Node> {
         var min = Number.MAX_SAFE_INTEGER;
 
         for( var i = 0; i < paths.length; i++ ) {
-            console.log(paths[i]);
             if( paths[i].distance < min ) {
                 min = paths[i].distance;
                 minIndex = i;
